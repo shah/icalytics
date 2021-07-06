@@ -1,0 +1,7 @@
+# private/sensitive files should not be git-tracked
+calendar.ics
+calendar.csv
+config.ts
+
+# created if debugging requested
+calendar.debug.json
