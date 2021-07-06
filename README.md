@@ -4,5 +4,11 @@ Given an `*.ics` file, analyze it to find events that match organizations by par
 
 Usage:
 
-1. Copy `config.example.ts` to `config.ts` and setup configuration
-2. `deno run -A --unstable mod.ts`
+1. Save your calendar file as `calendar.ics`.
+2. Copy `config.example.ts` to `config.ts` and setup configuration.
+3. `deno run -A --unstable mod.ts`
+4. The results are in `calendar.csv`.
+
+Dependencies:
+
+* Deno 1.11 or above
