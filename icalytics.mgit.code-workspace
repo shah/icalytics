@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"git.autofetch": true,
+		"editor.formatOnSave": true,
 		"deno.enable": true,
 		"deno.suggest.imports.hosts": {
 			"https://deno.land": true
@@ -16,7 +17,32 @@
 	"extensions": {
 		"recommendations": [
 			"mechatroner.rainbow-csv",
-			"af4jm.vscode-icalendar"
+			"af4jm.vscode-icalendar",
+			"spmeesseman.vscode-taskexplorer",
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"type": "shell",
+				"label": "Transform Calendar using ASDF-managed Deno",
+				"detail": "Use config.ts as configuration to parse iCal `iCalSrcFile` entries from `rangeStart` through `rangeEnd`, transform into CSV, and save to `calendarCSV`",
+				"command": "/usr/bin/env ${env:HOME}/.asdf/shims/direnv exec ${workspaceFolder} ${env:HOME}/.asdf/shims/deno run -A --unstable mod.ts",
+				"options": {
+					"cwd": "${workspaceFolder}",
+					"shell": {
+						"executable": "bash",
+						"args": [
+							"-c"
+						]
+					}
+				},
+				"presentation": {
+					"reveal": "always",
+					"close": false
+				}
+			}
 		]
 	}
 }
