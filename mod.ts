@@ -259,6 +259,23 @@ export function includeCalendarEvent(e: CalendarEvent): boolean {
   return false;
 }
 
+console.log(`Parsed ${events.length} iCal entries from ${config.iCalSrcFile}.`);
+const transformed = events.filter(includeCalendarEvent).map((e) =>
+  [
+    e.organization ? e.organization : "?",
+    e.isRecurring ? "Recurring" : "",
+    datetime.format(e.startDate, "yyyy-MM-dd HH:mm"),
+    e.duration.minutes,
+    e.subject,
+    e.organizer ? e.organizer.name : "",
+    e.attendees
+      ? e.attendees.filter((i) =>
+        !config.skipEmailAddresses.find((ea) => ea == i.email)
+      ).map((i) => i.name).join(", ")
+      : "",
+  ].map((c) => (c && c.toString().indexOf(",")) > 0 ? `"${c}"` : c).join(",")
+);
+
 Deno.writeTextFileSync(
   config.calendarCSV,
   [
@@ -269,26 +286,10 @@ Deno.writeTextFileSync(
     "Subject",
     "Organizer",
     "Attendees",
-  ]
-    .join(",") +
-    "\n" +
-    events.filter(includeCalendarEvent).map((e) =>
-      [
-        e.organization ? e.organization : "?",
-        e.isRecurring ? "Recurring" : "",
-        datetime.format(e.startDate, "yyyy-MM-dd HH:mm"),
-        e.duration.minutes,
-        e.subject,
-        e.organizer ? e.organizer.name : "",
-        e.attendees
-          ? e.attendees.filter((i) =>
-            !config.skipEmailAddresses.find((ea) => ea == i.email)
-          ).map((i) => i.name).join(", ")
-          : "",
-      ].map((c) => (c && c.toString().indexOf(",")) > 0 ? `"${c}"` : c).join(
-        ",",
-      )
-    ).join("\n"),
+  ].join(",") + "\n" + transformed.join("\n"),
+);
+console.log(
+  `Saved ${transformed.length} CSV entries in ${config.calendarCSV}.`,
 );
 
 if (config.iCalDebugJSON) {
@@ -296,4 +297,5 @@ if (config.iCalDebugJSON) {
     config.iCalDebugJSON,
     JSON.stringify(events, undefined, "  "),
   );
+  console.log(`Saved iCal transformation JSON in ${config.iCalDebugJSON}.`);
 }
