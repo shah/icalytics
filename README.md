@@ -9,6 +9,9 @@ Usage:
 2. Copy `config.example.ts` to `config.ts` and setup configuration, especially `rangeStart` and `rangeEnd`.
 3. Execute `deno run -A --unstable mod.ts` at command line or `Transform Calendar` VS Code task.
 
+Maintenance:
+
+Run `find . -name "deps.ts" | xargs udd` to update dependencies.
 
 Dependencies:
 
