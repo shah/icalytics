@@ -16,7 +16,7 @@ export const analyzeOrgs = [
   { name: "Company1", emailFilter: /company1.com/ },
   { name: "Customer2", emailFilter: /customer2.com/ },
   { name: "Microsoft", emailFilter: /microsoft.com/ },
-  { name: "Apple Computer", emailFilter: /apple/ },
+  { name: "Apple Computer", emailFilter: /apple/, nameFilter: /Steve/ },
 ];
 
 // Skip these email addresses (usually your own)

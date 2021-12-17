@@ -67,20 +67,29 @@ export interface CalendarEventParticipantsFilter {
   (e: CalendarEventParticipants): boolean;
 }
 
-export function organizerOrAttendeeEmailFilter(
-  emailFilter: RegExp,
+export function organizerOrAttendeeFilter(
+  { emailFilter, nameFilter }: {
+    readonly emailFilter?: RegExp;
+    readonly nameFilter?: RegExp;
+  },
 ): CalendarEventParticipantsFilter {
   return (
     e: CalendarEventParticipants,
   ): boolean => {
     if (
-      e.organizer?.email && e.organizer.email.match(emailFilter)
+      emailFilter && e.organizer?.email && e.organizer.email.match(emailFilter)
     ) {
+      return true;
+    }
+    if (nameFilter && e.organizer?.name && e.organizer.name.match(nameFilter)) {
       return true;
     }
     if (e.attendees) {
       for (const a of e.attendees) {
-        if (a.email && a.email.match(emailFilter)) {
+        if (emailFilter && a.email && a.email.match(emailFilter)) {
+          return true;
+        }
+        if (nameFilter && a.name && a.name.match(nameFilter)) {
           return true;
         }
       }
@@ -249,7 +258,7 @@ for (const event of Object.values<Record<string, any>>(calendar)) {
 
 export function includeCalendarEvent(e: CalendarEvent): boolean {
   for (const org of config.analyzeOrgs) {
-    const filter = organizerOrAttendeeEmailFilter(org.emailFilter);
+    const filter = organizerOrAttendeeFilter(org);
     if (filter(e)) {
       // deno-lint-ignore no-explicit-any
       (e as any).organization = org.name;
